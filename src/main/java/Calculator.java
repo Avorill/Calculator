@@ -92,7 +92,7 @@ public class Calculator {
                     break;
                 case "/":
                     try {
-                        result = first.divide(second, 1000, RoundingMode.HALF_UP);
+                        result = first.divide(second, 6, RoundingMode.HALF_UP);
                     } catch (ArithmeticException ex) {
                         JOptionPane.showMessageDialog(frame, "Division by zero");
                     }

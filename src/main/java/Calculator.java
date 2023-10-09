@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 
 public class Calculator {
@@ -58,6 +60,9 @@ public class Calculator {
     }
 
     private void calculate() {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator(' ');
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.#######", symbols);
         String firstNumberText = firstNumberField.getText();
         String firstT = firstNumberText.trim().replace(",", ".");
         String operator = (String) operatorComboBox.getSelectedItem();
@@ -103,7 +108,8 @@ public class Calculator {
             }
 
             if (result != null) {
-                resultField.setText(result.toString());
+                resultField.setText(decimalFormat.format(result));
+
             }
         } catch (NumberFormatException | ArithmeticException ex) {
             JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.");

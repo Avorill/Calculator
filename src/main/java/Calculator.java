@@ -64,26 +64,31 @@ public class Calculator {
         symbols.setGroupingSeparator(' ');
         DecimalFormat decimalFormat = new DecimalFormat("#,##0.#######", symbols);
         String firstNumberText = firstNumberField.getText();
-        String firstT = firstNumberText.trim().replace(",", ".");
+        String firstT = firstNumberText.replace(",", ".").replace(" ", "");
         String operator = (String) operatorComboBox.getSelectedItem();
         String secondNumberText = secondNumberField.getText();
-        String secondT = secondNumberText.trim().replace(",", ".");
+        String secondT = secondNumberText.trim().replace(",", ".").replace(" ", "");
         BigDecimal first;
         BigDecimal second;
 
+        // Проверка на наличие множественных пробелов
+        if (firstNumberText.contains("  ") || secondNumberText.contains("  ")) {
+            JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.");
+            return;
+        }
+
         try {
-            try{
-                if(firstT.contains("e") ||firstT.contains("E")){
+            try {
+                if (firstT.contains("e") || firstT.contains("E")) {
                     expoException();
                 }
-            }
-            catch (Exception ex){
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(frame, "Exponential!");
                 return;
             }
-                 first = new BigDecimal(firstT);
-                 second = new BigDecimal(secondT);
-                 BigDecimal result = null;
+            first = new BigDecimal(firstT);
+            second = new BigDecimal(secondT);
+            BigDecimal result = null;
 
             switch (operator) {
                 case "+":
@@ -109,13 +114,12 @@ public class Calculator {
 
             if (result != null) {
                 resultField.setText(decimalFormat.format(result));
-
             }
         } catch (NumberFormatException | ArithmeticException ex) {
             JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.");
-
         }
     }
+
 
     public void show() {
         frame.pack();

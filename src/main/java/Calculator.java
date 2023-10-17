@@ -61,7 +61,7 @@ public class Calculator {
     }
 
     private void calculate() {
-        DecimalFormat decimalFormat = new DecimalFormat("#,##0.#######");
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.######");
         DecimalFormatSymbols customSymbols = new DecimalFormatSymbols();
         customSymbols.setGroupingSeparator(' ');
         customSymbols.setDecimalSeparator('.');
@@ -71,6 +71,10 @@ public class Calculator {
         String secondNumberText = secondNumberField.getText();
 
         // Проверка на наличие множественных пробелов
+        if(firstNumberText.contains("e") || secondNumberText.contains("e")){
+            JOptionPane.showMessageDialog(frame, "Exponential!");
+            return;
+        }
         if (firstNumberText.contains("  ") || secondNumberText.contains("  ")) {
             JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.");
             return;

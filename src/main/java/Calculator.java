@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 
 public class Calculator {
@@ -60,22 +61,37 @@ public class Calculator {
     }
 
     private void calculate() {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-        symbols.setGroupingSeparator(' ');
-        DecimalFormat decimalFormat = new DecimalFormat("#,##0.#######", symbols);
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.#######");
+        DecimalFormatSymbols customSymbols = new DecimalFormatSymbols();
+        customSymbols.setGroupingSeparator(' ');
+        customSymbols.setDecimalSeparator('.');
+        decimalFormat.setDecimalFormatSymbols(customSymbols);
         String firstNumberText = firstNumberField.getText();
-        String firstT = firstNumberText.replace(",", ".").replace(" ", "");
         String operator = (String) operatorComboBox.getSelectedItem();
         String secondNumberText = secondNumberField.getText();
-        String secondT = secondNumberText.trim().replace(",", ".").replace(" ", "");
-        BigDecimal first;
-        BigDecimal second;
 
         // Проверка на наличие множественных пробелов
         if (firstNumberText.contains("  ") || secondNumberText.contains("  ")) {
             JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.");
             return;
         }
+
+        if (!firstNumberText.matches("[0-9]+(\\s[0-9]{3})*(\\.|,)?[0-9]*")) {
+            JOptionPane.showMessageDialog(frame, "Invalid input for the first number. Please enter a valid number.");
+            return;
+        }
+
+// Проверка формата второго числа
+        if (!secondNumberText.matches("[0-9]+(\\s[0-9]{3})*(\\.|,)?[0-9]*")) {
+            JOptionPane.showMessageDialog(frame, "Invalid input for the second number. Please enter a valid number.");
+            return;
+        }
+
+        // Преобразование введенных строк в числа
+        String firstT = firstNumberText.replaceAll("\\s", "").replace(",", ".");
+        String secondT = secondNumberText.replaceAll("\\s", "").replace(",", ".");
+        BigDecimal first;
+        BigDecimal second;
 
         try {
             try {
@@ -119,6 +135,7 @@ public class Calculator {
             JOptionPane.showMessageDialog(frame, "Invalid input. Please enter valid numbers.");
         }
     }
+
 
 
     public void show() {

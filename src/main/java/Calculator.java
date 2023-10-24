@@ -80,13 +80,13 @@ public class Calculator {
             return;
         }
 
-        if (!firstNumberText.matches("[0-9]+(\\s[0-9]{3})*(\\.|,)?[0-9]*")) {
+        if (!firstNumberText.matches("-?[0-9]+(\\s[0-9]{3})*(\\.|,)?[0-9]*")) {
             JOptionPane.showMessageDialog(frame, "Invalid input for the first number. Please enter a valid number.");
             return;
         }
 
 // Проверка формата второго числа
-        if (!secondNumberText.matches("[0-9]+(\\s[0-9]{3})*(\\.|,)?[0-9]*")) {
+        if (!secondNumberText.matches("-?[0-9]+(\\s[0-9]{3})*(\\.|,)?[0-9]*")) {
             JOptionPane.showMessageDialog(frame, "Invalid input for the second number. Please enter a valid number.");
             return;
         }

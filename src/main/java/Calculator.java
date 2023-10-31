@@ -20,6 +20,36 @@ public class Calculator {
     final private JTextField fourthNumberField;
     final private JTextField roundedResultField;
     final private JComboBox roundingModeComboBox;
+    private BigDecimal operation(String operator,BigDecimal first, BigDecimal sec ){
+        BigDecimal result = null;
+        switch (operator) {
+            case "+":
+               result = first.add(sec);
+                break;
+            case "-":
+                result = first.subtract(sec);
+
+                break;
+            case "*":
+                result= first.multiply(sec);
+
+                break;
+            case "/":
+                try {
+                    result = first.divide(sec, 10, RoundingMode.HALF_UP);
+
+                } catch (ArithmeticException ex) {
+                    JOptionPane.showMessageDialog(frame, "Division by zero");
+                }
+
+                break;
+            default:
+                JOptionPane.showMessageDialog(frame, "Operation not found.");
+                break;
+        }
+        System.out.println(result);
+        return result;
+    }
 
     public Calculator() {
         frame = new JFrame("Calculator");
@@ -127,79 +157,36 @@ public class Calculator {
             second = new BigDecimal(secondT);
             third = new BigDecimal(thirdT);
             fourth = new BigDecimal(fourthT);
-            BigDecimal result = null;
-            BigDecimal preResult = null;
-            BigDecimal preResultSecond = null;
-            switch (secondOperator) {
-                case "+":
-                    preResult = second.add(third);
-                    break;
-                case "-":
-                    preResult = second.subtract(third);
-                    break;
-                case "*":
-                    preResult = second.multiply(third);
-                    break;
-                case "/":
-                    try {
-                        preResult = second.divide(third, 10, RoundingMode.HALF_UP);
-                    } catch (ArithmeticException ex) {
-                        JOptionPane.showMessageDialog(frame, "Division by zero");
-                    }
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(frame, "Operation not found.");
-                    break;
-            }
-
+            BigDecimal result=null;
+            BigDecimal preResult=null;
+            BigDecimal preResultSecond=null;
+            assert secondOperator != null;
+            preResult =  operation(secondOperator,second,third);
             if (preResult != null) {
                 resultField.setText(decimalFormat.format(preResult));
             }
-            switch (firstOperator) {
-                case "+":
-                    preResultSecond = first.add(preResult);
-                    break;
-                case "-":
-                    preResultSecond = first.subtract(preResult);
-                    break;
-                case "*":
-                    preResultSecond = first.multiply(preResult);
-                    break;
-                case "/":
-                    try {
-                        preResultSecond = first.divide(preResult, 10, RoundingMode.HALF_UP);
-                    } catch (ArithmeticException ex) {
-                        JOptionPane.showMessageDialog(frame, "Division by zero");
-                    }
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(frame, "Operation not found.");
-                    break;
-            }
-            if (preResultSecond != null) {
-                resultField.setText(decimalFormat.format(preResultSecond));
-            }
-            switch (thirdOperator) {
-                case "+":
-                    result = preResultSecond.add(fourth);
-                    break;
-                case "-":
-                    result = preResultSecond.subtract(fourth);
-                    break;
-                case "*":
-                    result = preResultSecond.multiply(fourth);
-                    break;
-                case "/":
-                    try {
-                        result = preResultSecond.divide(fourth, 6, RoundingMode.HALF_UP);
-                    } catch (ArithmeticException ex) {
-                        JOptionPane.showMessageDialog(frame, "Division by zero");
-                    }
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(frame, "Operation not found.");
-                    break;
-            }
+            assert firstOperator != null;
+            assert thirdOperator != null;
+            if(firstOperator.equals("*") ||firstOperator.equals("/")){
+                preResultSecond = operation(firstOperator,first,preResult);
+                if (preResultSecond != null) {
+                    resultField.setText(decimalFormat.format(preResultSecond));
+                }
+                result= operation(thirdOperator,preResultSecond,fourth);
+            } else if(thirdOperator.equals("*") || thirdOperator.equals("/")){
+                preResultSecond = operation(thirdOperator,preResult,fourth);
+                if (preResultSecond != null) {
+                    resultField.setText(decimalFormat.format(preResultSecond));
+                }
+                result = operation(firstOperator, first,preResultSecond);
+            } else{
+                preResultSecond = operation(firstOperator,first,preResult);
+                if (preResultSecond != null) {
+                    resultField.setText(decimalFormat.format(preResultSecond));
+                }
+                result= operation(thirdOperator,preResultSecond,fourth);
+                }
+
             if (result != null) {
                 resultField.setText(decimalFormat.format(result));
                 BigDecimal roundedResult ;
